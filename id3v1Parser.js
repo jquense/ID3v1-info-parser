@@ -20,8 +20,8 @@ Id3v1Parser.prototype._transform = function(chunk, enc, done) {
 };
 
 Id3v1Parser.prototype._flush = function(done) {
-    done();
     this._parseTags();
+    done();
 };
 
 
