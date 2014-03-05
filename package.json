@@ -1,0 +1,27 @@
+{
+  "name": "id3v1-parser",
+  "version": "0.3.0",
+  "description": "Simple ID3 version 1 streaming parser",
+  "main": "id3v1Parser.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theporchrat/ID3v1-info-parser"
+  },
+  "keywords": [
+    "mp3",
+    "tag",
+    "metadata",
+    "audio",
+    "parser",
+    "ID3"
+  ],
+  "author": "Jason Quense @theporchrat",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/theporchrat/ID3v1-info-parser/issues"
+  },
+  "homepage": "https://github.com/theporchrat/ID3v1-info-parser"
+}
