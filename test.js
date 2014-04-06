@@ -35,18 +35,16 @@ describe ('when streaming an mpeg file to the tag parser', function(){
 
     describe('when the file is invalid', function(){
 
-        beforeEach(function(){
-            parser._lastChunk = new Buffer('definitely not an mp3 file')
-        })
+        it('should throw an error', function(){
+            var err;
+            try {
+                Parser.parseTags( new Buffer( 'definitely not an mp3 file' ) )
+            } catch (e)
+            {
+                err = e;
+            }
 
-        it('should throw an error', function(done){
-
-            parser.on('error', function(err){
-                err.type.should.equal('AudioInfoNotFoundError')
-                done()
-            })
-
-            parser._parseTags()
+            err.type.should.equal('AudioInfoNotFoundError')
         })
     })
 })

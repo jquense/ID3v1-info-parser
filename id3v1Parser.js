@@ -15,40 +15,50 @@ inherits(Id3v1Parser, Transform);
 
 Id3v1Parser.prototype._transform = function(chunk, enc, done) {
     this._lastChunk = chunk;
-
     done();
 };
 
 Id3v1Parser.prototype._flush = function(done) {
-    this._parseTags();
+    var chunk = this._lastChunk
+      , tags;
+
+    chunk = chunk.slice(chunk.length - 128);
+
+    try {
+        tags = Id3v1Parser.parseTags(chunk)
+
+        for(var k in tags) this.push(k, tags[k])
+        this.push(null);
+
+    } catch (err){
+        this.emit('error', err)
+    }
+
     done();
 };
 
 
-
-Id3v1Parser.prototype._parseTags = function(){
-    var chunk  = this._lastChunk
-      , off = chunk.length - 128
+Id3v1Parser.parseTags = function(chunk){
+    var off = 0
+      , tags = {}
       , err;
 
     if ( getString(chunk, off, off += 3 ) !== 'TAG' ) {
-        err = new Error("Not a valid ID3v1 tag")      
-        err.type = "AudioInfoNotFoundError";
-        this.emit('error', err)
+        err = new Error("Not a valid ID3v1 tag")
+        err.type = "AudioInfoNotFoundError"
+        throw err
     }
-        
-    
-    this.push( 'title',   getString(chunk, off, off += 30 ))
-    this.push( 'artist',  getString(chunk, off, off += 30 ))
-    this.push( 'album',   getString(chunk, off, off += 30 ))
-    this.push( 'year',    getString(chunk, off, off += 4  ))
-    this.push( 'comment', getString(chunk, off, off += 28 ))
 
-    this.push( 'track',   chunk[off += 1])
-    this.push( 'genre',   chunk[off += 1])
+    tags.title = getString(chunk, off, off += 30 )
+    tags.artist = getString(chunk, off, off += 30 )
+    tags.album = getString(chunk, off, off += 30 )
+    tags.year = getString(chunk, off, off += 4  )
+    tags.comment= getString(chunk, off, off += 28 )
 
-    this.push(null);
-    
+    tags.track = chunk[off += 1]
+    tags.genre = chunk[off += 1]
+
+    return tags;
 }
 
 Id3v1Parser.prototype.push = function tag(tag, value){
